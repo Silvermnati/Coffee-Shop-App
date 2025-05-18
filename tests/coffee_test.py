@@ -3,36 +3,44 @@ from customer import Customer
 from coffee import Coffee
 from order import Order
 
-class TestCustomer:
+class TestCoffee:
     def test_name_validation(self):
         with pytest.raises(TypeError):
-            Customer(123)
+            Coffee(123)
         with pytest.raises(ValueError):
-            Customer("")
-        with pytest.raises(ValueError):
-            Customer("ThisNameIsWayTooLongForValidation")
+            Coffee("ab")
+        coffee = Coffee("Latte")
+        with pytest.raises(AttributeError):
+            coffee.name = "NewName"
     
     def test_orders(self):
-        c = Customer("Test")
         cof = Coffee("TestCoffee")
+        c = Customer("Test")
         o = Order(c, cof, 5.0)
-        assert o in c.orders()
+        assert o in cof.orders()
     
-    def test_coffees(self):
-        c = Customer("Test")
-        cof1 = Coffee("Coffee1")
-        cof2 = Coffee("Coffee2")
-        Order(c, cof1, 5.0)
-        Order(c, cof1, 6.0)
-        Order(c, cof2, 4.5)
-        assert len(c.coffees()) == 2
-        assert cof1 in c.coffees()
-        assert cof2 in c.coffees()
-    
-    def test_create_order(self):
-        c = Customer("Test")
+    def test_customers(self):
         cof = Coffee("TestCoffee")
-        o = c.create_order(cof, 5.0)
-        assert o in c.orders()
-        assert o.coffee == cof
-        assert o.price == 5.0
+        c1 = Customer("Test1")
+        c2 = Customer("Test2")
+        Order(c1, cof, 5.0)
+        Order(c1, cof, 6.0)
+        Order(c2, cof, 4.5)
+        assert len(cof.customers()) == 2
+        assert c1 in cof.customers()
+        assert c2 in cof.customers()
+    
+    def test_num_orders(self):
+        cof = Coffee("TestCoffee")
+        c = Customer("Test")
+        assert cof.num_orders() == 0
+        Order(c, cof, 5.0)
+        assert cof.num_orders() == 1
+    
+    def test_average_price(self):
+        cof = Coffee("TestCoffee")
+        c = Customer("Test")
+        assert cof.average_price() == 0
+        Order(c, cof, 4.0)
+        Order(c, cof, 6.0)
+        assert cof.average_price() == 5.0
