@@ -1,3 +1,4 @@
+
 class Customer:
     def __init__(self, name):
         self.name = name
@@ -5,6 +6,8 @@ class Customer:
     @property
     def name(self):
         return self._name
+
+        
     
     @name.setter
     def name(self, name):
@@ -15,16 +18,18 @@ class Customer:
         self._name = name
     
     def orders(self):
+        from order import Order
         return [order for order in Order.all if order.customer == self]
     
     def coffees(self):
         return list({order.coffee for order in self.orders()})
     
     def create_order(self, coffee, price):
+        from order import Order
         return Order(self, coffee, price)
     
     @classmethod
-    def most_aficionado(cls, coffee):
+    def most_aficionado(cls, coffee):  
         if not isinstance(coffee, Coffee):
             raise TypeError("Must be a Coffee instance")
         
